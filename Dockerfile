@@ -1,21 +1,33 @@
-# Use the official Node.js image as a base image
-FROM node:21
+FROM node:14
 
-# Set the working directory inside the container
 WORKDIR /usr/src/app
 
-# Copy package.json and package-lock.json
 COPY package*.json ./
-
-# Install dependencies
 RUN npm install
 
-# Copy the rest of the application code
+# Instalar PM2 globalmente
+RUN npm install -g pm2
+
 COPY . .
 
-# Expose the port the app runs on
+# Instalar dependências necessárias para o Puppeteer
+RUN apt-get update && apt-get install -y \
+    fonts-liberation \
+    libasound2 \
+    libatk-bridge2.0-0 \
+    libatk1.0-0 \
+    libcups2 \
+    libdbus-1-3 \
+    libgtk-3-0 \
+    libnspr4 \
+    libnss3 \
+    libxcomposite1 \
+    libxdamage1 \
+    libxrandr2 \
+    xdg-utils \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
 EXPOSE 3000
 
-# Start the application using PM2
-RUN npm install pm2 -g
-CMD ["pm2-runtime", "server.js"]
+CMD ["pm2-runtime", "start", "server.js"]
