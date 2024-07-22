@@ -1,10 +1,8 @@
 const express = require('express');
+const router = express.Router();
+const authMiddleware = require('../authMiddleware');
 
-module.exports = (page) => {
-    const router = express.Router();
-    const { scrapeVideos } = require('../controllers/videoController')(page);
-
-    router.post('/', scrapeVideos);
-
+module.exports = (page, scrapeVideos) => {
+    router.post('/videos', authMiddleware, scrapeVideos);
     return router;
 };
