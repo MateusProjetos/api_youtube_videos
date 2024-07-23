@@ -27,7 +27,7 @@ module.exports = (page) => {
                     const title = video.querySelector('.title')?.innerText || '';
                     const link = video.href;
 
-                    videoData.push({ title,link });
+                    videoData.push({ title, link });
                 });
 
                 return videoData;
@@ -40,15 +40,9 @@ module.exports = (page) => {
                 const videoId = video.link.split('/').pop();
                 const videoInfo = await ytdl.getInfo(videoId);
 
-                const videoyoutube = `https://www.youtube.com/watch?v=${videoId}`
-
                 const publishDate = new Date(videoInfo.videoDetails.publishDate);
-                video.link_youtube = videoyoutube
                 video.date = format(publishDate, 'dd/MM/yyyy');
                 video.description = videoInfo.videoDetails.description;
-
-
-                delete video.link;
             }
 
             res.status(200).json(limitedVideos);
